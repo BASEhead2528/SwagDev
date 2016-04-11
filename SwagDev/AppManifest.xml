@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--Created:cb85b80c-f585-40ff-8bfc-12ff4d0e34a9-->
+<App xmlns="http://schemas.microsoft.com/sharepoint/2012/app/manifest"
+     Name="SwagDev"
+     ProductID="{7c4c9b31-2ad7-4f97-84e8-56d62bebc697}"
+     Version="1.0.0.1"
+     SharePointMinVersion="16.0.0.0"
+>
+  <Properties>
+    <Title>SwagDev</Title>
+    <StartPage>~remoteAppUrl/?{StandardTokens}</StartPage>
+  </Properties>
+
+  <AppPrincipal>
+    <RemoteWebApplication ClientId="*" />
+  </AppPrincipal>
+</App>

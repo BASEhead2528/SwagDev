@@ -1,0 +1,189 @@
+﻿
+@model SwagDevWeb.ViewModels.Cart
+
+<h1>Welcome to your cart</h1>
+
+@*@Html.TextBox("Client")
+<input type="submit" id="GetClients" value="Submit"/>*@
+
+<!-- temp comment--> 
+
+
+
+<!-- Well I am the master branch and I make comments too-->
+
+@using(Html.BeginForm("CheckOut", "Browse", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <div class="form-group">
+            @Html.LabelFor(model => model.Order.Client, htmlAttributes: new {  @class="control-label col-md-2 cartFormLabel" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Order.Client, new { htmlAttributes = new { @id="Client", @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Order.Client, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Order.MeetingDate, htmlAttributes: new { @class = "control-label col-md-2 cartFormLabel" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Order.MeetingDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Order.MeetingDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Order.DateNeeded, htmlAttributes: new { @class = "control-label col-md-2 cartFormLabel" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Order.DateNeeded, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Order.DateNeeded, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+
+    <table class="table">
+
+        <tr class="cartRow">
+            <th>
+                Name
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Image
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th>
+                User Actions
+            </th>
+        </tr>
+       
+        @Html.EditorFor(model => model.CartItems)
+
+
+
+        @*@foreach (var item in Model.CartItems)
+        {
+             <tr>
+                 <td>
+                    @item.Swag.Name
+                 </td>
+                <td>
+                    @item.Swag.Description
+                </td>
+                <td>
+                    <img src="@item.Swag.Image" width=20%/>
+                </td>
+                <td>
+                    <input type="number" onpaste="return false;" value="@item.Quantity" class="form-control text-box single-line quantityInput">
+                </td>
+                <td>
+                    User Actions will go here
+                </td>
+            </tr>
+        }*@
+
+    </table>
+
+    <div class="form-group pull-right">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Check Out" class="btn btn-primary" />
+        </div>
+    </div>
+
+}
+
+@*bundle these soon*@
+<script src="~/Scripts/jquery-ui-1.11.4.min.js" ></script>
+<link href="~/Content/jquery-ui.min-1.11.4.css" rel="stylesheet" />
+
+@section Scripts{
+    <script src="~/Scripts/bootbox.min.js"></script>
+    <script>
+
+        $(function () {
+            $("#Client").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '@Url.Action("AutoCompleteClients","Browse")',
+                        type: "POST",
+                        dataType: "json",
+                        data: { term: request.term },
+                        success: function (data) {
+                            console.log(data);
+                            response($.map(data, function (item) {
+                                return { label: item.Name, value: item.Name };
+                            }));
+                        }
+                    })
+                }
+            });
+        });
+
+        $(".removeFromCart").click(function () {
+
+            var item = this.id,
+
+            thisRow = $(this).closest('tr'),
+            prevRow = thisRow.prevAll(".cartRow").first(),
+            nextRow = thisRow.nextAll(".cartRow").first(),
+            rowHeight = thisRow.height(),
+            tableRowPadding = 8;
+
+            console.log(nextRow);
+
+            thisRow.addClass("removeFromCartSlide");
+            thisRow.css('margin-top', -rowHeight);
+
+            prevRow.after($('<tr id="tempRow">').append($('<td></td>')));
+
+            var tempRow = $("#tempRow");
+
+            prevRow.css("border-bottom", "1px solid #dddddd");
+
+            tempRow.children().css({ "margin-bottom": rowHeight-(2*tableRowPadding), "display": "inline-block" });
+
+            thisRow.one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function (e) {
+                thisRow.css('display', 'none');
+                tempRow.children().animate({
+                    marginBottom: "0",
+                    height: "0"
+                }, 300, function () {
+                    tempRow.remove();
+
+                    // 20px is the height of the leftover tempRow
+                    nextRow.children().css("padding-top", "20px");
+
+                    nextRow.children().animate({
+                        paddingTop: tableRowPadding
+                    }, 400)
+                });
+
+            });
+
+
+
+            // This should be a delete method but was not working, security hole here Fix!!
+
+            $.ajax({
+                method: 'POST',
+                url: '@Url.Action("removeFromCart", "Browse")',
+                //dataType: "json",
+                data: { itemID: item },
+                error: function (data) {
+                    console.log(data);
+                    bootbox.alert("There was an error and your item was not deleted", '');
+                },
+                success: function (data) {
+                    $("#cart").html(data.cartQuant);
+                }
+            });
+        });
+
+    </script>
+}
+

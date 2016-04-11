@@ -1,0 +1,36 @@
+﻿@model List<SwagDevWeb.Models.CartItem>
+
+
+
+@for (var i = 0; i < Model.Count; i++)
+{
+    
+    
+    @Html.HiddenFor(model => model[i].SwagID)
+    @Html.HiddenFor(model => model[i].ID)
+
+
+    <tr class="cartRow">
+        <td>
+            @Model[i].Swag.Name
+            
+        </td>
+        <td>
+            @Model[i].Swag.Description
+           
+        </td>
+        <td>
+            <img src="@Url.Content(Model[i].Swag.Image)" width=20% />
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m[i].Quantity, htmlAttributes: new { @onpaste = "return false;", @type = "number", @class = "form-control text-box single-line quantityInput" })
+            @*<input type="number" onpaste="return false;" value="@item.Quantity" class="form-control text-box single-line quantityInput">*@
+        </td>
+        <td>
+            <a class="removeFromCart" id="@Model[i].ID"><span class="glyphicon glyphicon-remove"></span></a>
+        </td>
+    </tr>
+}
+
+
+

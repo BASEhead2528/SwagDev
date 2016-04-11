@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Back to SharePoint", "Back", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    @*<li>@Html.ActionLink("About", "About", "Home")</li>
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
+                    <li>@Html.ActionLink("Shop","Index","Browse")</li>
+
+
+                    @*  This may not belong in the view. Use some other way if you can  *@
+                    @if (ViewContext.HttpContext.Session["UserGroups"] != null)
+                    { 
+                        if (SwagDevWeb.Utilities.StaticMethods.isInGroup(
+                            (IEnumerable<object>)ViewContext.HttpContext.Session["UserGroups"], 
+                            "SWAG_INV_MANAGER")
+                        )
+                        {
+                            <li>@Html.ActionLink("Inventory", "Index", "Swag")</li>
+                        }
+                    }
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href='@Url.Action("Cart","Browse")'><span class="glyphicon glyphicon-shopping-cart"></span>(<span id="cart">@Session["CartQuant"]</span>)</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    <div class="container body-content">
+        @RenderBody()
+        <br/>
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Red Level</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/spcontext")
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

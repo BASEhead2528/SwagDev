@@ -1,0 +1,103 @@
+﻿@model IEnumerable<SwagDevWeb.Models.Swag>
+
+@{
+    ViewBag.Title = "Browse";
+}
+
+<h2>Browse</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UnitCost)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Quantity)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Image)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th></th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UnitCost)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+                <img src="@item.Image" width=20% />
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                <input type="number" id="@item.ID" onpaste="return false;" class="form-control text-box single-line quantityInput" />
+            </td>
+            <td>
+                <a class="addToCart" id="@item.ID" data-swag-name="@item.Name"><span class="glyphicon glyphicon-plus"></span></a>
+            </td>
+        </tr>
+    }
+
+</table>
+
+@section Scripts {
+    <script src="~/Scripts/bootbox.min.js"></script>
+    <script>
+        $(function () {
+
+            $(".quantityInput").on('paste', function (e) {
+                //e.target.value = null;
+            });
+
+            $(".addToCart").click(function () {
+
+                var qtyElem = $("input[id=" + this.id + "]");
+                var qty = parseInt(qtyElem.val());
+                var itemID = this.id;
+                var itemName = $(this).attr("data-swag-name")
+
+                if (qty != null && qty > 0 && isInt(qty)) {
+                    bootbox.confirm("Would you like to add " + qty + " " + itemName + "(s) to your cart?", function (result) {
+                        if (result) {
+                            $.ajax({
+                                method: "POST",
+                                url: '@Url.Action("addToCart", "Browse")',
+                                data: {
+                                    itemID: itemID,
+                                    qty: qty
+                                },
+                                success: function (data) {
+                                    $("#cart").html(data);
+                                }
+                            })
+                        }
+                    });
+                }
+                else {
+                    bootbox.alert("Please specify a valid quantity", '');
+                }
+
+                qtyElem.val('');
+            });
+        });
+
+        var isInt = function (n) { return parseInt(n) === n };
+
+    </script>
+}

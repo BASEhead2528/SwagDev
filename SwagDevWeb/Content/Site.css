@@ -1,0 +1,96 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+.hiddenField{
+    display:none;
+}
+
+.quantityInput{
+    width:65px
+}
+
+.table thead > tr > th, .table tbody > tr > th, .table tfoot > tr > th, .table thead > tr > td, .table tbody > tr > td, .table tfoot > tr > td {
+    vertical-align:middle
+}
+
+.addToCart .glyphicon-plus, .removeFromCart .glyphicon-remove{
+    font-size:30px
+}
+
+
+.control-label.col-md-2.cartFormLabel{
+    text-align:left
+}
+
+.ui-autocomplete-loading { background:url('images/indicator.gif') no-repeat right center }
+
+
+
+.removeFromCartSlide{
+    position:absolute;
+    background-color:#FEF6CF;
+    -webkit-animation-name: itemSlideRight;
+    /*animation-name:itemSlideRight;*/
+    -webkit-animation-duration: .5s;
+    /*animation-duration: .3s;*/
+    -webkit-animation-iteration-count: 1;
+    /*animation-iteration-count: 1;*/
+    -webkit-animation-timing-function: cubic-bezier(.2,.75,.27,.83);
+    /*animation-timing-function: cubic-bezier(.2,.75,.27,.83);*/
+}
+
+
+
+/*@keyframes itemSlideRight{
+  0% { left: 0 }
+  99% { left: 99%}
+  100% { left: 100%; display:none }
+}*/
+
+@-webkit-keyframes itemSlideRight{
+    0% { left: 20%}
+    99% { left: 99%}
+    100% { left: 100%; display:none }
+}
