@@ -134,12 +134,14 @@ namespace SwagDevWeb.Controllers
                     if (taxonomySession != null)
                     {
                         TermStore termstore = taxonomySession.GetDefaultKeywordsTermStore();
+
+                        //This is where our active clients list lives. 
+                        //We could pull from a DB but since the client names are already on SharePoint why not
                         TermGroup termgroup = termstore.Groups.GetByName("ConnectWise");
                         TermSet termset = termgroup.TermSets.GetByName("Clients");
 
                         clientContext.Load(termset.Terms);
                         clientContext.ExecuteQuery();
-                        Debug.WriteLine("Terms being set");
                         return termset.Terms.ToList();
                     }
                 }
